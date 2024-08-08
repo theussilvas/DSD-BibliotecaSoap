@@ -1,7 +1,7 @@
 import * as soap from 'soap';
 import { Menu } from './menu';
 
-const url = 'http://127.0.0.1:8000/?wsdl';
+const url = 'http://0.0.0.0:8000/?wsdl';
 
 
 

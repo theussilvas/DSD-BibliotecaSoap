@@ -37,6 +37,6 @@ wsgi_app = WsgiApplication(application)
 
 if __name__ == '__main__':
     from wsgiref.simple_server import make_server
-    server = make_server('127.0.0.1',8000, wsgi_app)
+    server = make_server('10.25.1.251',8000, wsgi_app)
     print("Rodando na porta 8000")
     server.serve_forever()
