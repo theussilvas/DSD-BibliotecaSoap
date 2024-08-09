@@ -37,12 +37,12 @@ export class Menu {
                         console.error('Erro ao listar livros:', err);
                     } else {
                         if (result && result.listarLivrosResult && Array.isArray(result.listarLivrosResult.string)) {
-                            console.log("Lista de Livros Disponíveis:");
+                            console.log("Lista de Livros:");
                             result.listarLivrosResult.string.forEach((livro: string, index: number) => {
                                 console.log(`${index + 1}. ${livro}`);
                             });
                         } else {
-                            console.log("Nenhum livro disponível.");
+                            console.log("Nenhum livro encontrado.");
                         }
                     }
                     console.log();
@@ -56,12 +56,12 @@ export class Menu {
                             console.error("Erro ao procurar livros por autor:", err);
                         } else {
                             if (result && result.livrosAutorResult && Array.isArray(result.livrosAutorResult.string)) {
-                                console.log(`Livros disponíveis de ${autor}:`);
+                                console.log(`Livros de ${autor}:`);
                                 result.livrosAutorResult.string.forEach((livro: string, index: number) => {
                                     console.log(`${index + 1}. ${livro}`);
                                 });
                             } else {
-                                console.log("Nenhum livro disponível para este autor.");
+                                console.log("Nenhum livro encontrado para este autor.");
                             }
                         }
                         console.log();
