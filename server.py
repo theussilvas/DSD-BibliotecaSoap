@@ -22,21 +22,27 @@ class BibliotecaService(ServiceBase):
         
     @rpc(_returns=Iterable(Unicode))
     def listarLivros(ctx):
-        results = [f"{livro['nome']} - {livro['autor']}" 
-                   for livro in BibliotecaService.livros if livro['disponivel']]
+        # Retorna todos os livros, indicando se estão disponíveis ou emprestados
+        results = [
+            f"{livro['nome']} - {livro['autor']} ({'Disponível' if livro['disponivel'] else 'Emprestado'})" 
+            for livro in BibliotecaService.livros
+        ]
         return results
 
     @rpc(Unicode, _returns=Iterable(Unicode))
     def livrosAutor(ctx, author):
-        result = [f"{livro['nome']} - {livro['autor']}" 
-                  for livro in BibliotecaService.livros if livro['autor'] == author and livro['disponivel']]
+        # Retorna todos os livros de um autor específico, indicando se estão disponíveis ou emprestados
+        result = [
+            f"{livro['nome']} - {livro['autor']} ({'Disponível' if livro['disponivel'] else 'Emprestado'})"
+            for livro in BibliotecaService.livros if livro['autor'] == author
+        ]
         return result
     
     @rpc(Unicode, _returns=Unicode)
     def pegarLivro(ctx, nome):
-        nome = nome.strip()  # Normaliza a entrada
+        nome = nome.strip().lower()  # Normaliza a entrada
         for livro in BibliotecaService.livros:
-            if livro['nome'].lower() == nome.lower():  # Comparação case insensitive
+            if livro['nome'].lower() == nome:
                 if livro['disponivel']:
                     livro['disponivel'] = False
                     return f"Você pegou o livro '{livro['nome']}'."
@@ -46,9 +52,9 @@ class BibliotecaService(ServiceBase):
     
     @rpc(Unicode, _returns=Unicode)
     def devolverLivro(ctx, nome):
-        nome = nome.strip()  # Normaliza a entrada
+        nome = nome.strip().lower()  # Normaliza a entrada
         for livro in BibliotecaService.livros:
-            if livro['nome'].lower() == nome.lower():  # Comparação case insensitive
+            if livro['nome'].lower() == nome:
                 if not livro['disponivel']:
                     livro['disponivel'] = True
                     return f"Você devolveu o livro '{livro['nome']}'."
