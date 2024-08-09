@@ -4,27 +4,28 @@ export class Menu {
     private rl: readline.Interface;
     private client: any;
 
-    constructor(client:any) {
+    constructor(client: any) {
         this.client = client;
         this.rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
         });
 
-        console.log("Bem vindo a biblioteca");
+        console.log("Bem vindo à biblioteca");
         console.log();
         console.log("O que deseja fazer?");
         this.showOptions();
     }
 
     private showOptions() {
-        console.log("1- Ver livros disponíveis");
+        console.log("1 - Ver livros disponíveis");
         console.log("2 - Procurar livro por autor");
         console.log("3 - Pegar um livro");
         console.log("4 - Devolver um livro");
         console.log("5 - Adicionar um livro");
+        console.log("6 - Sair");
         this.rl.question('Escolha uma opção: ', (answer) => {
-            this.handleOption(answer);
+            this.handleOption(answer.trim());
         });
     }
 
@@ -35,14 +36,13 @@ export class Menu {
                     if (err) {
                         console.error('Erro ao listar livros:', err);
                     } else {
-                        // Verifica se a lista de livros existe e é um array
                         if (result && result.listarLivrosResult && Array.isArray(result.listarLivrosResult.string)) {
-                            console.log("Lista de Livros:");
+                            console.log("Lista de Livros Disponíveis:");
                             result.listarLivrosResult.string.forEach((livro: string, index: number) => {
                                 console.log(`${index + 1}. ${livro}`);
                             });
                         } else {
-                            console.log("Nenhum livro encontrado.");
+                            console.log("Nenhum livro disponível.");
                         }
                     }
                     console.log();
@@ -50,30 +50,66 @@ export class Menu {
                 });
                 break;
             case '2':
-                console.log("Você escolheu procurar livro por autor.");
+                this.rl.question("Digite o nome do autor: ", (autor) => {
+                    this.client.livrosAutor({ author: autor.trim() }, (err: any, result: any) => {
+                        if (err) {
+                            console.error("Erro ao procurar livros por autor:", err);
+                        } else {
+                            if (result && result.livrosAutorResult && Array.isArray(result.livrosAutorResult.string)) {
+                                console.log(`Livros disponíveis de ${autor}:`);
+                                result.livrosAutorResult.string.forEach((livro: string, index: number) => {
+                                    console.log(`${index + 1}. ${livro}`);
+                                });
+                            } else {
+                                console.log("Nenhum livro disponível para este autor.");
+                            }
+                        }
+                        console.log();
+                        this.showOptions();
+                    });
+                });
                 break;
             case '3':
-                console.log("Você escolheu pegar um livro.");
+                this.rl.question("Digite o nome do livro que deseja pegar emprestado: ", (nomeLivro) => {
+                    const nomeNormalizado = nomeLivro.trim();
+                    this.client.pegarLivro({ nome: nomeNormalizado }, (err: any, result: any) => {
+                        if (err) {
+                            console.error("Erro ao pegar livro:", err);
+                        } else {
+                            console.log(result.pegarLivroResult);
+                        }
+                        console.log();
+                        this.showOptions();
+                    });
+                });
                 break;
             case '4':
-                console.log("Você escolheu devolver um livro.");
+                this.rl.question("Digite o nome do livro que deseja devolver: ", (nomeLivro) => {
+                    const nomeNormalizado = nomeLivro.trim();
+                    this.client.devolverLivro({ nome: nomeNormalizado }, (err: any, result: any) => {
+                        if (err) {
+                            console.error("Erro ao devolver livro:", err);
+                        } else {
+                            console.log(result.devolverLivroResult);
+                        }
+                        console.log();
+                        this.showOptions();
+                    });
+                });
                 break;
-
             case '5':
-                console.log();
-                this.rl.question("Digite o nome do livro:",(livro)=>{
-                    this.rl.question("Digite o nome do autor:", (autor)=>{
+                this.rl.question("Digite o nome do livro: ", (livro) => {
+                    this.rl.question("Digite o nome do autor: ", (autor) => {
                         const params = {
-                            nome:livro,
-                            autor:autor
+                            nome: livro.trim(),
+                            autor: autor.trim()
                         };
-
-                        this.client.addLivro(params,(err:any,result:any)=>{
-                            if(err){
-                                console.error("Erro ao adicionar",err);
+                        this.client.addLivro(params, (err: any, result: any) => {
+                            if (err) {
+                                console.error("Erro ao adicionar", err);
                             }
                             console.log(result);
-                            this.showOptions()
+                            this.showOptions();
                         });
                     });
                 });
@@ -87,7 +123,5 @@ export class Menu {
                 this.showOptions();
                 break;
         }
-        
     }
 }
-
