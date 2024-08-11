@@ -131,9 +131,11 @@ class Menu {
                         };
                         this.client.addLivro(params, (err, result) => {
                             if (err) {
-                                console.error("Erro ao adicionar", err);
+                                console.error("Erro ao adicionar livro:", err);
                             }
-                            console.log(result);
+                            else {
+                                console.log("Livro adicionado com sucesso!");
+                            }
                             this.showOptions();
                         });
                     });
