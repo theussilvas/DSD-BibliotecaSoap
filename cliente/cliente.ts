@@ -1,6 +1,7 @@
 import * as soap from 'soap';
+import { Menu } from './menu';
 
-const url = 'http://127.0.0.1:8000/?wsdl';
+const url = 'http://10.25.1.213:8000/?wsdl';
 
 
 
@@ -9,20 +10,5 @@ soap.createClient(url,(err,client)=>{
         console.error('Erro ao criar cliente soap',err);
         return;
     }
-
-    client.listarLivros((err:string,result:string)=>{
-        if(err){
-            console.error('Erro ao executar')
-        }
-
-        console.log('Todos os livros', result)
-    })
-
-    // client.addLivro('The Great Gatsby','F. Scott Fitzgerald', (err: any, result: any)=>{
-    //     if(err){
-    //         console.error('Erro ao adicionar livro',err);
-    //         return;
-    //     }
-    //     console.log('Livro adicionado', result);
-    // })
+    const menuInstance = new Menu(client);   
 })

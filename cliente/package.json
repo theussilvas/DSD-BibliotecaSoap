@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "soap": "^1.1.1"
+    "soap": "^1.1.1",
+    "ts-node": "^10.9.2",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/node": "^22.1.0",
+    "@types/xml2js": "^0.4.14",
     "typescript": "^5.5.4"
   }
 }
